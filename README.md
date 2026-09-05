@@ -66,7 +66,9 @@ src/
 
 4. **Singleton (repositories)** — `CartRepositoryImpl` and `CouponRepositoryImpl` expose a static `getInstance()` returning a single shared instance. (Note: this simple lazy-check version is not thread-safe — two threads can pass the `instance == null` check simultaneously. Thread-safe alternatives: synchronized double-checked locking, the initialization-on-demand holder idiom, or an enum singleton — good interview follow-up material.)
 
-5. **Repository** — In-memory `ConcurrentHashMap`-backed storage, interfaces + impls. Repositories speak only storage language (`save`, `findById`) — no business logic.
+5. **Factory (ValidatorHandlerFactory)** — `ValidatorHandlerFactory.getCouponValidator(coupon)` centralizes construction of the validator chain. Clients (e.g., `CartServiceImpl`) never assemble the chain themselves — they just ask the factory for a ready-to-use validator. If the chain order or composition changes (e.g., add a per-user-limit validator), only the factory changes.
+
+6. **Repository** — In-memory `ConcurrentHashMap`-backed storage, interfaces + impls. Repositories speak only storage language (`save`, `findById`) — no business logic.
 
 ### Key Design Decisions
 
